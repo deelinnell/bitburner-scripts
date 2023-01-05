@@ -89,7 +89,7 @@ export async function main(ns) {
     function hackTarget(target, cycle) {
         const money = cycle > 1 ? ns.getServerMaxMoney(target) : ns.getServerMoneyAvailable(target);
         const time = ns.getHackTime(target);
-		const threads = Math.floor( ns.hackAnalyzeThreads(target, money) );
+	const threads = Math.floor( ns.hackAnalyzeThreads(target, money) );
         const security = ns.hackAnalyzeSecurity(threads, target);
         const remainder = money - ( ns.hackAnalyze(target) * threads );
     // HACK - returns object w/ time and threads required, plus security and money results.
@@ -102,9 +102,9 @@ export async function main(ns) {
     }
 
     function growTarget(target, money) {
-		const time = ns.getGrowTime(target);
+	const time = ns.getGrowTime(target);
         const growth = 100 / ( money * 100 / ns.getServerMaxMoney(target) );
-		const threads = Math.floor(ns.growthAnalyze(target, 100));
+	const threads = Math.floor(ns.growthAnalyze(target, 100));
         const security = ns.growthAnalyzeSecurity(threads, target, 1);
     // GROW - returns object w/ time and threads required, plus security and growth results.
         return {
@@ -117,7 +117,7 @@ export async function main(ns) {
 
     function weakenTarget(target, security) {
         const weak = ns.weakenAnalyze(1);
-		const time = ns.getWeakenTime(target);
+	const time = ns.getWeakenTime(target);
         const threads = Math.floor(security ? security / weak : ns.getServerSecurityLevel(target) / weak);
     // WEAKEN - returns object w/ time and threads required.
         return {
@@ -195,9 +195,9 @@ export async function main(ns) {
     }
 
     function getTotalThreads(network) {
-		let threads = network.reduce((sum, node) => {
-				return sum += node.threads;
-			}, 0);
+	let threads = network.reduce((sum, node) => {
+		return sum += node.threads;
+		}, 0);
     // Returns thread total from network paramenter.
 		return threads;
 	}
@@ -233,14 +233,14 @@ export async function main(ns) {
 
     // Calculate total amount of unused threads on a network.
     function getNetworkAvailableThreads(network) {
-		return network.map(node => getNodeAvailableThreads(node)).filter(node => node.threads > 0);
+	return network.map(node => getNodeAvailableThreads(node)).filter(node => node.threads > 0);
 	}
 
     function getNodeAvailableThreads(node) {
-		const name = node;
-		const threads = getThreads(ns.getServerMaxRam(node) - ns.getServerUsedRam(node));
+	const name = node;
+	const threads = getThreads(ns.getServerMaxRam(node) - ns.getServerUsedRam(node));
     // Returns object with server name and unused threads.
-        return {
+        	return {
 			name,
 			threads
 		};
@@ -259,11 +259,11 @@ export async function main(ns) {
 	}
 
     function getNodeMaxThreads(node) {
-		const name = node;
+	const name = node;
         const maxRam = ns.getServerMaxRam(node);
-		const threads = getMaxThreadsPerScript(maxRam);
+	const threads = getMaxThreadsPerScript(maxRam);
     // Returns object with server name and max threads.
-        return {
+       		return {
 			name,
 			threads
 		};
@@ -283,10 +283,10 @@ export async function main(ns) {
     function getNetworkThreadTotalsPerScript(network) {
 		let threads = {};
 	    for (let script in scripts) {
-			let total = network.reduce((sum, node) => {
-				return sum += node.threads[script];
-			}, 0);
-			threads[script] = total;
+		let total = network.reduce((sum, node) => {
+			return sum += node.threads[script];
+		}, 0);
+		threads[script] = total;
         }
     // Returns object with total number of threads on network parameter for each script type.
 		return threads;
