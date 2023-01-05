@@ -343,10 +343,10 @@ export async function main(ns) {
     }
 
     // Main Loop
-	while (true) {
+    while (true) {
 	const target = getTargets().pop().name;
         let cycle = 1;
         await mainAttackCycle(target, cycle);
         await ns.sleep(30000);
-	}
+    }
 }
