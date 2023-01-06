@@ -202,31 +202,32 @@ export async function main(ns) {
 		return threads;
 	}
 
+  
     // Main attack loop for each script in the cycle.
     async function attackPerScript(attack, target) {
     // Get available servers / threads for each attack.
         const network = getNetworkAvailableThreads(getTotalAvailableNetwork());
         const script = attack.script;
         const threads = attack.threads;
-        network.map(node => {
-            execScriptPerServer(target, script, node, threads);
-        });
-    }
 
-    function execScriptPerServer(target, script, node, requiredThreads) {
-    // Runs number of threads required on network to complete attack.
-        for (let i = requiredThreads; i > 0;) {
-            let threads = i >= node.threads ? node.threads : i;
-        // Executes script on server.
-            execScript(script, node.name, threads, target);
-            i -= threads;
+        for (let i = 0; i < network.length; i++) {
+		let node = network[i];
+		let running = ns.scriptRunning(script, node.name);
+
+            if (threads > node.threads && running === false) {
+                execScript(script, node.name, node.threads, target);
+                threads = threads - node.threads;
+            } else if (running === false) {
+                execScript(script, node.name, threads, target);
+                break;
+            }
         }
     }
 
     function execScript(script, node, threads, target) {
         ns.exec(script, node, threads, target);
     }
-
+	
     //============================
     //===== THREAD FUNCTIONS =====
     //============================
