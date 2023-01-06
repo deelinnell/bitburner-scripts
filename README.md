@@ -1,4 +1,4 @@
-# bitburner-scripts
+# Bitburner Scripts
 Bitburner is a programming based game that focuses on incrementation and automation. In this cyberpunk world you play as a hacker. Your goal is to steal as much money as possible from the various servers in the world. This is done by gaining access to servers and running viruses on them, which helps you hack more servers, and so on.
 
 There are built in methods to help you write your scripts. Each method costs an amount of memory to run and each server has a max amount of memory. 'Scan' is a method, which takes a parameter - a server's name - and returns an array of servers directly connected to the argument. With scan you can build a map of the network. There are over 100 methods that help you fine tune your scripts.
