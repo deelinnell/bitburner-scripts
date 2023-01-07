@@ -8,3 +8,5 @@ These are my scripts I've written so far. The main.js module finds all the serve
 The script then calculates how many threads are needed for each attack, and how many threads are available on which servers. A specific number of servers are then chosen to run each script the calculated amount of times, at a specified time. Each attack takes a different amount of time to complete after execution based on the target server's stats. After all scripts are executed the process is started over again.
 
 I'm currently working on timing the attacks better and recursively calling the attack function with predictions of future variables and arguments. Theoretically you should be able to get the attacks to trigger within a very small window and have each cycle trigger in sequence, infinitly - only limited by available memory. On some servers weakening can take 1 hour, growth around 50 mins and hacking 35 mins. Getting all attacks to trigger in the right order with the most efficient amount of threads is quite the challenge.
+
+![bitburner-ss](https://user-images.githubusercontent.com/61264144/211128262-1568946b-c6bb-4d15-bde0-000079cb39d1.png)
