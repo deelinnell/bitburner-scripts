@@ -13,15 +13,15 @@ export async function main(ns) {
     }
 
     async function wait() {
-		while (ns.getServerMoneyAvailable(home) > ns.getPurchasedServerCost(ram) === false) {
-			await ns.sleep(30000);
-		}
+	while (ns.getServerMoneyAvailable(home) > ns.getPurchasedServerCost(ram) === false) {
+		await ns.sleep(30000);
+	}
     }
 
-	async function purchase(name) {
+    async function purchase(name) {
         await wait();
-		ns.purchaseServer(name, ram);
-	}
+	ns.purchaseServer(name, ram);
+    }
 
     async function upgrade(name) {
         await wait();
