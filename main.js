@@ -102,9 +102,9 @@ export async function main(ns) {
     }
 
     function growTarget(target, money) {
-		const time = ns.getGrowTime(target);
+	const time = ns.getGrowTime(target);
         const growth = 100 / ( money * 100 / ns.getServerMaxMoney(target) );
-		const threads = Math.floor(ns.growthAnalyze(target, 100));
+	const threads = Math.floor(ns.growthAnalyze(target, 100));
         const security = ns.growthAnalyzeSecurity(threads, target, 1);
     // GROW - returns object w/ time and threads required, plus security and growth results.
         return {
@@ -117,7 +117,7 @@ export async function main(ns) {
 
     function weakenTarget(target, security) {
         const weak = ns.weakenAnalyze(1);
-		const time = ns.getWeakenTime(target);
+	const time = ns.getWeakenTime(target);
         const threads = Math.floor(security ? security / weak : ns.getServerSecurityLevel(target) / weak);
     // WEAKEN - returns object w/ time and threads required.
         return {
@@ -196,11 +196,11 @@ export async function main(ns) {
 
     function getTotalThreads(network) {
 		let threads = network.reduce((sum, node) => {
-	    	return sum += node.threads;
-	    }, 0);
+			return sum += node.threads;
+		}, 0);
     // Returns thread total from network paramenter.
-	    return threads;
-    }
+		return threads;
+	}
 
   
     // Main attack loop for each script in the cycle.
@@ -260,9 +260,9 @@ export async function main(ns) {
 	}
 
     function getNodeMaxThreads(node) {
-	const name = node;
+		const name = node;
         const maxRam = ns.getServerMaxRam(node);
-	const threads = getMaxThreadsPerScript(maxRam);
+		const threads = getMaxThreadsPerScript(maxRam);
     // Returns object with server name and max threads.
        	return {
 	    	name,
@@ -304,8 +304,8 @@ export async function main(ns) {
     }
 
 	function getTargetStats(node) {
-	const name = node;
-	const maxMoney = ns.getServerMaxMoney(node);
+		const name = node;
+		const maxMoney = ns.getServerMaxMoney(node);
         const money = ns.getServerMoneyAvailable(node);
         const success = ns.hackAnalyzeChance(node);
     // Returns object with statistics about server.
