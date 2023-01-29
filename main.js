@@ -243,7 +243,7 @@ export async function main(ns) {
         return {
             name,
             threads
-        };
+        }
     }
 
     function getThreads(ram) {
@@ -266,7 +266,7 @@ export async function main(ns) {
         return {
             name,
             threads
-        };
+        }
     }
 
     function getMaxThreadsPerScript(maxRam) {
@@ -313,7 +313,7 @@ export async function main(ns) {
             money,
             maxMoney,
             success
-        };
+        }
     }
 
     function findScript(target) {
