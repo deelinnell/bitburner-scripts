@@ -38,7 +38,7 @@ export async function main(ns) {
 
     function copyScripts(name) {
         for (let script in scripts) {
-            ns.scp(scripts[script], name, "home");
+            ns.scp(scripts[script], name, home);
         }
     }
 
