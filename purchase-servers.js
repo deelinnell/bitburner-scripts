@@ -4,7 +4,7 @@ export async function main(ns) {
     const pre = "pserv-";
     const limit = ns.getPurchasedServerLimit();
     const maxRam = ns.getPurchasedServerMaxRam();
-    let ram = 32;
+    let ram = 16;
 
     const scripts = {
         hack: 'hack.js',
@@ -38,7 +38,7 @@ export async function main(ns) {
 
     function copyScripts(name) {
         for (let script in scripts) {
-            ns.scp(scripts[script], name, "home");
+            ns.scp(scripts[script], name, home);
         }
     }
 

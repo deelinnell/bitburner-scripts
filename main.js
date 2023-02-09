@@ -60,11 +60,11 @@ export async function main(ns) {
         // Returns array with servers that can be hacked.
         return hackable;
     }
-
-    // Returns array with cracked servers and purchased servers.
+    
     function getTotalAvailableNetwork() {
         const vulnerable = getVulnerableNodes();
         const allServers = ns.getPurchasedServers().concat(vulnerable);
+        // Returns array with cracked servers and purchased servers.
         return allServers;
     }
 
