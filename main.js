@@ -212,143 +212,145 @@ export async function main(ns) {
         for (let i = 0; i < network.length; i++) {
             let node = network[i];
             let running = ns.scriptRunning(script, node.name);
-
-            function execScriptPerServer(target, script, node, requiredThreads) {
-                // Runs number of threads required on network to complete attack.
-                for (let i = requiredThreads; i > 0;) {
-                    let threads = i >= node.threads ? node.threads : i;
-                    // Executes script on server.
-                    execScript(script, node.name, threads, target);
-                    i -= threads;
-                }
-            }
-
-            function execScript(script, node, threads, target) {
-                ns.exec(script, node, threads, target);
-            }
-
-            //============================
-            //===== THREAD FUNCTIONS =====
-            //============================
-
-            // Calculate total amount of unused threads on a network.
-            function getNetworkAvailableThreads(network) {
-                return network.map(node => getNodeAvailableThreads(node)).filter(node => node.threads > 0);
-            }
-
-            function getNodeAvailableThreads(node) {
-                const name = node;
-                const threads = getThreads(ns.getServerMaxRam(node) - ns.getServerUsedRam(node));
-                // Returns object with server name and unused threads.
-                return {
-                    name,
-                    threads
-                }
-            }
-
-            function getThreads(ram) {
-                const scriptRam = ns.getScriptRam('weaken.js');
-                const threads = (ram - ram % scriptRam) / scriptRam;
-                // Returns unused threads based on ram paramenter.
-                return threads;
-            }
-
-            function getNetworkMaxThreads(network) {
-                // Returns array of servers with max threads.
-                return network.map(node => getNodeMaxThreads(node));
-            }
-
-            function getNodeMaxThreads(node) {
-                const name = node;
-                const maxRam = ns.getServerMaxRam(node);
-                const threads = getMaxThreadsPerScript(maxRam);
-                // Returns object with server name and max threads.
-                return {
-                    name,
-                    threads
-                }
-            }
-
-            function getMaxThreadsPerScript(maxRam) {
-                let threads = {};
-                for (let script in scripts) {
-                    const scriptRam = ns.getScriptRam(scripts[script]);
-                    const numOfThreads = (maxRam - maxRam % scriptRam) / scriptRam;
-                    threads[script] = numOfThreads;
-                }
-                // Returns object with number of threads for each script type.
-                return threads;
-            }
-
-            function getNetworkThreadTotalsPerScript(network) {
-                let threads = {};
-                for (let script in scripts) {
-                    let total = network.reduce((sum, node) => {
-                        return sum += node.threads[script];
-                    }, 0);
-                    threads[script] = total;
-                }
-                // Returns object with total number of threads on network parameter for each script type.
-                return threads;
-            }
-
-            //============================
-            //===== TARGET FUNCTIONS =====
-            //============================
-
-            function getTargets() {
-                const targets = getHackableNodes();
-                // Returns array of targets sorted by specified statistic.
-                return targets.map(node => getTargetStats(node)).sort(compareFn('maxMoney'));
-            }
-
-            function getTargetStats(node) {
-                const name = node;
-                const maxMoney = ns.getServerMaxMoney(node);
-                const money = ns.getServerMoneyAvailable(node);
-                const success = ns.hackAnalyzeChance(node);
-                // Returns object with statistics about server.
-                return {
-                    name,
-                    money,
-                    maxMoney,
-                    success
-                }
-            }
+            execScriptPerServer(target, script, node, threads);
         }
+    }
 
-        function findScript(target) {
-            const moneyThresh = ns.getServerMaxMoney(target) * 0.75;
-            const securityThresh = ns.getServerMinSecurityLevel(target) + 5;
-            // Returns script name based on statistics.
-            if (ns.getServerSecurityLevel(target) > securityThresh) {
-                return scripts.weaken;
-            } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
-                return scripts.grow;
+    function execScriptPerServer(target, script, node, requiredThreads) {
+        // Runs number of threads required on network to complete attack.
+        for (let i = requiredThreads; i > 0;) {
+            let threads = i >= node.threads ? node.threads : i;
+            // Executes script on server.
+            execScript(script, node.name, threads, target);
+            i -= threads;
+        }
+    }
+
+    function execScript(script, node, threads, target) {
+        ns.exec(script, node, threads, target);
+    }
+
+    //============================
+    //===== THREAD FUNCTIONS =====
+    //============================
+
+    // Calculate total amount of unused threads on a network.
+    function getNetworkAvailableThreads(network) {
+        return network.map(node => getNodeAvailableThreads(node)).filter(node => node.threads > 0);
+    }
+
+    function getNodeAvailableThreads(node) {
+        const name = node;
+        const threads = getThreads(ns.getServerMaxRam(node) - ns.getServerUsedRam(node));
+        // Returns object with server name and unused threads.
+        return {
+            name,
+            threads
+        }
+    }
+
+    function getThreads(ram) {
+        const scriptRam = ns.getScriptRam('weaken.js');
+        const threads = (ram - ram % scriptRam) / scriptRam;
+        // Returns unused threads based on ram paramenter.
+        return threads;
+    }
+
+    function getNetworkMaxThreads(network) {
+        // Returns array of servers with max threads.
+        return network.map(node => getNodeMaxThreads(node));
+    }
+
+    function getNodeMaxThreads(node) {
+        const name = node;
+        const maxRam = ns.getServerMaxRam(node);
+        const threads = getMaxThreadsPerScript(maxRam);
+        // Returns object with server name and max threads.
+        return {
+            name,
+            threads
+        }
+    }
+
+    function getMaxThreadsPerScript(maxRam) {
+        let threads = {};
+        for (let script in scripts) {
+            const scriptRam = ns.getScriptRam(scripts[script]);
+            const numOfThreads = (maxRam - maxRam % scriptRam) / scriptRam;
+            threads[script] = numOfThreads;
+        }
+        // Returns object with number of threads for each script type.
+        return threads;
+    }
+
+    function getNetworkThreadTotalsPerScript(network) {
+        let threads = {};
+        for (let script in scripts) {
+            let total = network.reduce((sum, node) => {
+                return sum += node.threads[script];
+            }, 0);
+            threads[script] = total;
+        }
+        // Returns object with total number of threads on network parameter for each script type.
+        return threads;
+    }
+
+    //============================
+    //===== TARGET FUNCTIONS =====
+    //============================
+
+    function getTargets() {
+        const targets = getHackableNodes();
+        // Returns array of targets sorted by specified statistic.
+        return targets.map(node => getTargetStats(node)).sort(compareFn('maxMoney'));
+    }
+
+    function getTargetStats(node) {
+        const name = node;
+        const maxMoney = ns.getServerMaxMoney(node);
+        const money = ns.getServerMoneyAvailable(node);
+        const success = ns.hackAnalyzeChance(node);
+        // Returns object with statistics about server.
+        return {
+            name,
+            money,
+            maxMoney,
+            success
+        }
+    }
+
+
+    function findScript(target) {
+        const moneyThresh = ns.getServerMaxMoney(target) * 0.75;
+        const securityThresh = ns.getServerMinSecurityLevel(target) + 5;
+        // Returns script name based on statistics.
+        if (ns.getServerSecurityLevel(target) > securityThresh) {
+            return scripts.weaken;
+        } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
+            return scripts.grow;
+        } else {
+            return scripts.hack;
+        }
+    }
+
+    function compareFn(compare) {
+        // Compare functions for sorting.
+        return (a, b) => {
+            if (a[compare] < b[compare]) {
+                return -1;
+            } else if (a[compare] > b[compare]) {
+                return 1;
             } else {
-                return scripts.hack;
+                return 0;
             }
         }
+    }
 
-        function compareFn(compare) {
-            // Compare functions for sorting.
-            return (a, b) => {
-                if (a[compare] < b[compare]) {
-                    return -1;
-                } else if (a[compare] > b[compare]) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        }
-
-        // Main Loop
-        while (true) {
-            const target = getTargets().pop().name;
-            let cycle = 1;
-            await mainAttackCycle(target, cycle);
-            await ns.sleep(30000);
-        }
+    // Main Loop
+    while (true) {
+        const target = getTargets().pop().name;
+        let cycle = 1;
+        await mainAttackCycle(target, cycle);
+        await ns.sleep(30000);
     }
 }
